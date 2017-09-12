@@ -1,19 +1,18 @@
 # Complexity Explorer - Introduction to Differential Equations - Unit 2 Homework
 # URL: https://www.complexityexplorer.org/tutorials/31-introduction-to-differential-equations/segments/incomplete?summary
 # Date: 29/03/17
-# Updated: 05/04/17, 28/04/17, 16/06/17
+# Updated: 05/04/17, 28/04/17, 16/06/17, 12/09/17
 
-# 3. (Advanced) Write a program that implements Euler's method for the main 
-# example of this unit, dT/dt= 0.2 (20 ???T ).
+# Q3. (Advanced) Write a program that implements Euler's method for the main 
+# example of this unit, dT/dt= 0.2 * (20 - T).
 # Some things to try out or experiment with:
-# (i) Have your program produce a plot of your Euler solution. - DONE, 29/03/17
-# (ii) Make plots of the Euler solutions for several different values of ???t.
-# Need to learn how to loop.. - DONE, 05/04/17
+# (i) Have your program produce a plot of your Euler solution.
+# (ii) Make plots of the Euler solutions for several different values of delta t.
 # (iii) Compare the Euler solution with the exact solution
-# T(t) = 20???5e^[???0.2t]. - DONE, 28/04/17
+# T(t) = 20 - 5e^[-0.2t].
 # (This analytic result is obtained via calculus, using T(0) = 15.)
 # (iv) Generalize your program so that it can solve any differential equation of 
-# the form dX / dt = f (X).
+# the form dX / dt = f (X). - NOT DONE HERE
 
 ################################################################################
   # LOAD LIBRARIES, DIRECTORIES AND GENERAL PARAMETERS (Colour, shape in plots)
