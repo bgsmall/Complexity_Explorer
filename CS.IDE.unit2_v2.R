@@ -149,7 +149,7 @@
   temp.res2.p <- ggplot(temp.res2, aes(times2,temp.res)) +
     geom_point() 
   
-  # Comparison plot
+  # Analytic versus Numerical Comparison plot
   comb.p <- ggplot(comb.d, aes(time,T,colour=code)) +
     geom_point() +
     scale_color_discrete()
