@@ -22,14 +22,6 @@
   library(deSolve)
   library(ggplot2)
   library(reshape2)
-  library(grid)
-  library(gridExtra)
-
-  # The palette with black and grey and additional deep red ("#990000"):
-  cbbPalette <- c("#E69F00", "#56B4E9", "#009E73", 
-                  "#F0E442", "#0072B2", "#D55E00", 
-                  "#CC79A7", "#990000","#000000", 
-                  "#999999")
 
   # Set working directory 
   setwd(" ") # Insert working directory location
