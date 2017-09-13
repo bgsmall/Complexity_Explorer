@@ -2,6 +2,7 @@
 # URL: https://www.complexityexplorer.org/tutorials/31-introduction-to-differential-equations/segments/incomplete?summary
 # Date: 29/03/17
 # Updated: 05/04/17, 28/04/17, 16/06/17, 12/09/17
+# Author: BGS
 
 # Q3. (Advanced) Write a program that implements Euler's method for the main 
 # example of this unit, dT/dt= 0.2 * (20 - T).
@@ -11,8 +12,6 @@
 # (iii) Compare the Euler solution with the exact solution
 # T(t) = 20 - 5e^[-0.2t].
 # (This analytic result is obtained via calculus, using T(0) = 15.)
-# (iv) Generalize your program so that it can solve any differential equation of 
-# the form dX / dt = f (X). - NOT DONE HERE
 
 ################################################################################
   # LOAD LIBRARIES, DIRECTORIES AND GENERAL PARAMETERS (Colour, shape in plots)
@@ -141,7 +140,7 @@
   temp.res2.p <- ggplot(temp.res2, aes(times2,temp.res)) +
     geom_point() 
   
-  # Analytic versus Numerical Comparison plot
+  # Analytic versus Numerical result comparison plot
   comb.p <- ggplot(comb.d, aes(time,T,colour=code)) +
     geom_point() +
     scale_color_discrete()
