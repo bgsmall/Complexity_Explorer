@@ -31,8 +31,8 @@
                   "#CC79A7", "#990000","#000000", 
                   "#999999")
 
-  # Set working directory # Insert working directory location
-  setwd("C:/Users/bsmall/Google Drive/Courses_Confs/Complexity_Explorer")
+  # Set working directory 
+  setwd(" ") # Insert working directory location
   
   # load data
   #load("CS.IDE.unit2.RData") # Uncomment this line if you want to load data 
@@ -56,7 +56,7 @@
   
   temp <- function (t, state, parameters){
     with(as.list(c(state, parameters)),{ #this line converts the 'state' and 
-      #'parameter' vectors to lists
+                                         #'parameter' vectors to lists
       #rate of change
       dT <- x * (y - T)
       # return the rates of change
@@ -88,23 +88,23 @@
   # OUTPUT
 ################################################################################
   
-  # Q3(i)
+  # Q3(i) - 'out' is the dataframe containing the results fro Q3(i)
   out <- ode(state, times1, temp, parameters)
   df.out <- as.data.frame(out)
   
-  # Q3(ii)
+  # Q3(ii) - 'dd' is the dataframe containing the results for Q3(ii)
   names(res) <- stepvec  ## to get stepvec values incorporated in results
   dd <- dplyr::bind_rows(lapply(res,as.data.frame),.id="step")
   dd$step <- as.numeric(dd$step)
   
 ################################################################################
-  # ANALYTIC RESULT
+  # ANALYTIC RESULT 
 ################################################################################
   
   # time vector
   times2 <- seq(1,100,0.1)
   
-  # see 'Complexity.xlsx / Unit2_Homework for breakdown of function'
+  # function
   temp.analy <- function(y){
     T = 20 - (5 * (exp(-0.2 * y)))
     print(T)
