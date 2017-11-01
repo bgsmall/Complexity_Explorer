@@ -1,19 +1,17 @@
 # Complexity Explorer - Introduction to Differential Equations - Unit 2 Homework
 # URL: https://www.complexityexplorer.org/tutorials/31-introduction-to-differential-equations/segments/incomplete?summary
 # Date: 29/03/17
-# Updated: 05/04/17, 28/04/17, 16/06/17
+# Updated: 05/04/17, 28/04/17, 16/06/17, 12/09/17
+# Author: BGS
 
-# 3. (Advanced) Write a program that implements Euler's method for the main 
-# example of this unit, dT/dt= 0.2 (20 ???T ).
+# Q3. (Advanced) Write a program that implements Euler's method for the main 
+# example of this unit, dT/dt= 0.2 * (20 - T).
 # Some things to try out or experiment with:
-# (i) Have your program produce a plot of your Euler solution. - DONE, 29/03/17
-# (ii) Make plots of the Euler solutions for several different values of ???t.
-# Need to learn how to loop.. - DONE, 05/04/17
+# (i) Have your program produce a plot of your Euler solution.
+# (ii) Make plots of the Euler solutions for several different values of delta t.
 # (iii) Compare the Euler solution with the exact solution
-# T(t) = 20???5e^[???0.2t]. - DONE, 28/04/17
+# T(t) = 20 - 5e^[-0.2t].
 # (This analytic result is obtained via calculus, using T(0) = 15.)
-# (iv) Generalize your program so that it can solve any differential equation of 
-# the form dX / dt = f (X).
 
 ################################################################################
   # LOAD LIBRARIES, DIRECTORIES AND GENERAL PARAMETERS (Colour, shape in plots)
@@ -23,17 +21,9 @@
   library(deSolve)
   library(ggplot2)
   library(reshape2)
-  library(grid)
-  library(gridExtra)
 
-  # The palette with black and grey and additional deep red ("#990000"):
-  cbbPalette <- c("#E69F00", "#56B4E9", "#009E73", 
-                  "#F0E442", "#0072B2", "#D55E00", 
-                  "#CC79A7", "#990000","#000000", 
-                  "#999999")
-
-  # Set working directory # Insert working directory location
-  setwd("C:/Users/bsmall/Google Drive/Courses_Confs/Complexity_Explorer")
+  # Set working directory 
+  setwd(" ") # Insert working directory location
   
   # load data
   #load("CS.IDE.unit2.RData") # Uncomment this line if you want to load data 
@@ -57,7 +47,7 @@
   
   temp <- function (t, state, parameters){
     with(as.list(c(state, parameters)),{ #this line converts the 'state' and 
-      #'parameter' vectors to lists
+                                         #'parameter' vectors to lists
       #rate of change
       dT <- x * (y - T)
       # return the rates of change
@@ -89,23 +79,23 @@
   # OUTPUT
 ################################################################################
   
-  # Q3(i)
-  out <- ode(state, times1, temp, parameters)
+  # Q3(i) - 'out' is the dataframe containing the results for Q3(i)
+  out <- ode(state, times1, temp, parameters, method = rkMethod("euler"))
   df.out <- as.data.frame(out)
   
-  # Q3(ii)
+  # Q3(ii) - 'dd' is the dataframe containing the results for Q3(ii)
   names(res) <- stepvec  ## to get stepvec values incorporated in results
   dd <- dplyr::bind_rows(lapply(res,as.data.frame),.id="step")
   dd$step <- as.numeric(dd$step)
   
 ################################################################################
-  # ANALYTIC RESULT
+  # ANALYTIC RESULT 
 ################################################################################
   
   # time vector
   times2 <- seq(1,100,0.1)
   
-  # see 'Complexity.xlsx / Unit2_Homework for breakdown of function'
+  # function
   temp.analy <- function(y){
     T = 20 - (5 * (exp(-0.2 * y)))
     print(T)
@@ -150,14 +140,14 @@
   temp.res2.p <- ggplot(temp.res2, aes(times2,temp.res)) +
     geom_point() 
   
-  # Comparison plot
+  # Analytic versus Numerical result comparison plot
   comb.p <- ggplot(comb.d, aes(time,T,colour=code)) +
     geom_point() +
     scale_color_discrete()
    
 
 ################################################################################
-  # SAVE IMAGE
+  # SAVE DATA
 ################################################################################
   
   save.image("CS.IDE.unit2.RData")
