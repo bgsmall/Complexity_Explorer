@@ -79,8 +79,8 @@
   # OUTPUT
 ################################################################################
   
-  # Q3(i) - 'out' is the dataframe containing the results fro Q3(i)
-  out <- ode(state, times1, temp, parameters)
+  # Q3(i) - 'out' is the dataframe containing the results for Q3(i)
+  out <- ode(state, times1, temp, parameters, method = rkMethod("euler"))
   df.out <- as.data.frame(out)
   
   # Q3(ii) - 'dd' is the dataframe containing the results for Q3(ii)
