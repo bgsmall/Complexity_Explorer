@@ -1,0 +1,235 @@
+---
+title: "Complexity Explorer - Introduction to Differential Equations - Unit 2 Homework"
+author: "BGS"
+date: "25 April 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+### Questions and Answers to Q3 (i) - (iii)
+These are my answers to the Unit 2 homework, namely Q3 . I've made
+use of some R packages in doing this. The whole course can be found at the link
+below:
+
+<https://www.complexityexplorer.org/tutorials/31-introduction-to-differential-equations/segments/incomplete?summary>
+
+First of, I'm going to load some packages and set the working directory to set the
+stage for answering these questions.
+```{r}
+  library(deSolve)
+  library(ggplot2)
+  library(reshape2)
+  library(magrittr)
+```
+Set a working directory (i.e. where you want to store this or other files.
+Usually has the form 'C:/Users/YOU/SOME_FOLDER' on Windows machines
+
+  setwd("C:/Users/YOU/SOME_FOLDER") 
+
+#### Q3. Write a program that implements Euler's method for the main example of this unit: 
+
+dT/dt = 0.2 * (20 - T)
+
+#### Some things to try out or experiment with:
+#### (i) Have your program produce a plot of your Euler solution.
+
+O.K so I cheat a little here (already!), by making use of the 'deSolve' package.
+I'm going to break down the solution to this problem in the standard way I would
+construct a file were I writing it as an *.R script
+```{r}
+################################################################################
+# PARAMETERS
+################################################################################
+
+  parameters <- c(x <- 0.2,
+                  y <- 20)
+
+################################################################################
+# STATE VARIABLES - ENSURE assignment operator is '=' NOT '<-' within 'state'
+################################################################################
+
+  state <- c(T = 10)
+
+################################################################################
+# MODEL
+################################################################################
+
+  temp <- function (t, state, parameters){
+    with(as.list(c(state, parameters)),{ #this line converts the 'state' and 
+      #'parameter' vectors to lists
+      #rate of change
+      dT <- x * (y - T)
+      # return the rates of change
+      return(list(dT))
+    })  #end with list
+  }
+
+  # Q3(i)
+  # Define times over which simulation is run
+  # TIME OF SIMULATION
+  times1 <- seq(0,40, by = 1)
+  
+################################################################################
+# OUTPUT
+################################################################################
+
+  # Q3(i) - 'out' is the dataframe containing the results for Q3(i)
+  out <- ode(state, times1, temp, parameters, method = rkMethod("euler"))
+  df.out <- as.data.frame(out)
+
+################################################################################
+# PLOTTING
+################################################################################
+
+  #Q3(i)
+  temp.p <- ggplot(df.out, aes(time,T)) + 
+    geom_point()
+```
+Here is the answer / plot to Q3(i)
+```{r temp.p, echo=FALSE}
+temp.p
+```
+
+#### (ii) Make plots of the Euler solutions for several different values of delta t.
+
+```{r}
+################################################################################
+# MODEL
+################################################################################
+
+# Q3(ii)
+  # Now define the vector of timesteps (delta t) to try:
+  stepvec <- c(0.1,1.0,10)
+# and define a list to hold the results:
+  res <- vector(length(stepvec),mode="list")
+
+  # take each value of 'x' and create a sequence dependent on 'x'
+  for(k in seq_along(stepvec)){
+    res[[k]] <- ode(y=state, 
+                    times=(seq(0,100,by=stepvec[k])),
+                    func=temp,
+                    parms=parameters)
+  }
+  
+################################################################################
+# OUTPUT
+################################################################################
+
+  # Q3(ii) - 'out2' is the dataframe containing the results for Q3(ii)
+  names(res) <- stepvec  ## to get stepvec values incorporated in results
+  out2 <- dplyr::bind_rows(lapply(res,as.data.frame),.id="step")
+  out2$step <- as.numeric(out2$step)
+  
+################################################################################
+# PLOTTING
+################################################################################
+
+  #Q3(ii)
+  temp.p2 <- ggplot(out2, aes(time,T,colour=factor(step))) + 
+    geom_point() +
+    scale_color_discrete()
+```
+
+Here's the result to Q3(ii) with the trajectories overlaid by one another using different timesteps / values of delta t
+
+```{r temp.p2, echo=FALSE}
+temp.p2
+```
+```{r}
+  #Q3(ii)
+  temp.p3 <- ggplot(out2, aes(time,T,colour=factor(step))) + 
+    geom_point() +
+    scale_color_discrete() +
+    facet_wrap(~step)
+```
+
+Here's the result to Q3(ii) with the trajectories seperated on the different timesteps / values of delta t 
+
+```{r temp.p3, echo=FALSE}
+temp.p3
+```
+
+#### (iii) Compare the Euler solution with the exact solution
+
+First, it's necessary to create a function to calculate the analytical solution. Then, for the purposes of comparison, we combine the analytical and numerical solutions to gauge their similarity or otherwise.
+
+```{r}
+################################################################################
+# ANALYTIC RESULT 
+################################################################################
+
+  # time vector
+  times2 <- seq(1,100,0.1)
+```
+```{r echo=T, results='hide'}
+  # function
+  temp.analy <- function(y){
+    T = 20 - (5 * (exp(-0.2 * y)))
+    print(T)
+  }
+```
+```{r echo=T, results='hide'}
+  # using sapply to apply 'temp.analy' over time vector 'y'
+  temp.res <- sapply(times2, temp.analy)
+```
+```{r}
+  # changes to ANALYTICAL dataset for combing with numerical
+  temp.res2 <- cbind.data.frame(times2,temp.res)
+  colnames(temp.res2) <- c("time","T")
+  temp.res2["code"] <- "analytical"
+
+  # changes to NUMERICAL dataset for combing with analytical
+  out2.sub <- (out2[1:1001,])
+  out2.sub <- out2.sub[,-1]
+  out2.sub["code"] <- "numerical" 
+
+  # combine ANALYTICAL dataset (by row) with NUMERICAL dataset
+  comb.d <- rbind.data.frame(temp.res2,out2.sub)
+```
+
+Q3(iii) plotted results are shown below;
+
+```{r}
+################################################################################
+# PLOTTING
+################################################################################
+
+  # Analytic result plot
+  temp.res2.p <- ggplot(temp.res2, aes(times2,temp.res)) +
+    geom_point()
+```
+
+The plot below shows the analytical solution
+
+```{r}
+temp.res2.p
+```
+```{r}
+  # Analytic versus Numerical result comparison plot
+  comb.p <- ggplot(comb.d, aes(time,T,colour=code)) +
+    geom_point() +
+    scale_color_discrete()
+```
+
+The plot below shows a comparison between the analytical and numerical solutions.
+
+```{r}
+comb.p
+```
+
+Maybe you would like to save the data? If so run the code below
+
+```{r}
+################################################################################
+# SAVE DATA
+################################################################################
+
+  save.image("CE.IDE.unit2_v3.RData")
+
+################################################################################
+
+################################################################################
+```
